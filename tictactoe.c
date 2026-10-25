@@ -9,7 +9,6 @@
 #define HUMAN 'X'
 #define EMPTY ' '
 
-//asdf
 struct Move {
     int row;
     int col;
