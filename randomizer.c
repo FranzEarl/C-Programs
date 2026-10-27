@@ -33,8 +33,6 @@ int main() {
         fflush(stdout);
     }
     Sleep(1000);
-
     printf("\r                                   \r\nWinner: %s", items[winner]);
-
     return 0;
 }
