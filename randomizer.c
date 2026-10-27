@@ -26,22 +26,12 @@ int main() {
 
     printf("The winner will be revealed in 5...");
     fflush(stdout);
-    Sleep(1000);
 
-    printf("\b\b\b\b4...");
-    fflush(stdout);
-    Sleep(1000);
-
-    printf("\b\b\b\b3...");
-    fflush(stdout);
-    Sleep(1000);
-
-    printf("\b\b\b\b2...");
-    fflush(stdout);
-    Sleep(1000);
-
-    printf("\b\b\b\b1...");
-    fflush(stdout);
+    for(int i = 4; i >= 1; i--) {
+        Sleep(1000);
+        printf("\b\b\b\b%d...", i);
+        fflush(stdout);
+    }
     Sleep(1000);
 
     printf("\r                                   \r\nWinner: %s", items[winner]);
