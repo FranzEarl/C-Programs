@@ -53,7 +53,7 @@ int main() {
 
     if(text[0] != '\0') {
         lines = 1;
-        
+
         for(int i = 0; text[i] != '\0'; i++) {
             if(text[i] == '\n') {
                 lines++;
@@ -64,7 +64,6 @@ int main() {
         }
     }
     
-
     printf("\n========== TEXT ANALYSIS ==========\n");
     printf("Characters (with whitespace):    %d\n", withSpaces);
     printf("Characters (without whitespace): %d\n", withoutSpaces);
