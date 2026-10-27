@@ -10,7 +10,7 @@ links = ""
 
 for file in files:
     name = escape(file.name)
-    url = quote(file.name, safe="")
+    url = "../" + quote(file.name, safe="")
     links += f'            <a href="{url}">{name}</a>\n'
 
 html = f"""<!DOCTYPE html>
