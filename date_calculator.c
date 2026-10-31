@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 typedef struct {
@@ -7,11 +8,39 @@ typedef struct {
     int year;
 } Date;
 
-Date inputDate() {
-    Date date;
+void clearInputBuffer() {
+    int ch;
 
-    printf("Enter date (DD-MM-YYYY): ");
-    scanf("%d-%d-%d", &date.day, &date.month, &date.year);
+    while((ch = getchar()) != '\n' && ch != EOF) {
+    }
+}
+
+Date inputDate() {
+    Date date = {0, 0, 0};
+    char input[100];
+
+    printf("Enter date (DD-MM-YYYY) or 'today': ");
+    if(scanf("%99s", input) != 1) {
+        printf("Invalid input!\n");
+        clearInputBuffer();
+        return date;
+    }
+    clearInputBuffer();
+
+    char extra;
+
+    if(strcmp(input, "today") == 0) {
+        time_t currentTime = time(NULL);
+        struct tm *date0 = localtime(&currentTime);
+
+        date.day = date0->tm_mday;
+        date.month = date0->tm_mon + 1;
+        date.year = date0->tm_year + 1900;
+    }
+    else if(sscanf(input, "%d-%d-%d %c",
+                   &date.day, &date.month, &date.year, &extra) != 3) {
+        printf("Invalid input!\n");
+    }
 
     return date;
 }
@@ -68,7 +97,6 @@ int dayOfWeek(Date date) {
 
     int k = year % 100;
     int j = year / 100;
-
     int h = (day + (13 * (month + 1)) / 5 + k + k / 4 + j / 4 + 5 * j) % 7;
 
     return (h + 6) % 7;
@@ -137,13 +165,11 @@ Date addDays(Date date, long long days) {
     return daysToDate(totalDays + days);
 }
 
-
 Date subtractDays(Date date, long long days) {
     long long totalDays = dateToDays(date);
 
     return daysToDate(totalDays - days);
 }
-
 
 void displayMenu() {
     printf("\n========== DATE CALCULATOR ==========\n");
@@ -156,7 +182,6 @@ void displayMenu() {
     printf("=====================================\n");
     printf("Choose an option: ");
 }
-
 
 void calculateDaysBetween() {
     printf("\n--- Calculate Days Between ---\n");
@@ -185,49 +210,149 @@ void calculateDaysBetween() {
     printf("Absolute difference: %lld days\n", result);
 }
 
+void calculateDateAfter() {
+    printf("\n--- Calculate Date After N Days ---\n");
 
-int main() {
     Date date = inputDate();
-    time_t currentTime = time(NULL);
-    struct tm *date0 = localtime(&currentTime);
-    Date newDate = addDays(date, 30);
-    Date newDate1 = subtractDays(date, 30);
-    int choice;
 
-    Date currentDate;
-    currentDate.day = date0->tm_mday;
-    currentDate.month = date0->tm_mon + 1;
-    currentDate.year = date0->tm_year + 1900;
+    if(!isValidDate(date)) {
+        printf("Invalid date!\n");
+        return;
+    }
 
-    printf("Date: %02d-%02d-%04d\n", date.day, date.month, date.year);
-    printf("Leap year: %s\n", isLeapYear(date.year) ? "Yes" : "No");
-    printf("Days in month: %d\n", daysInMonth(date.month, date.year));
+    long long days;
 
-    if(isValidDate(date)) {
-        printf("Valid date!\n");
+    printf("How many days to add? ");
+    
+    if(scanf("%lld", &days) != 1) {
+        printf("Invalid input!\n");
+        clearInputBuffer();
+        return;
+    }
+
+    clearInputBuffer();
+
+    if(days < 0) {
+        printf("Please enter a non-negative number.\n");
+        return;
+    }
+
+    Date result = addDays(date, days);
+
+    printf("\nResult: %02d-%02d-%04d\n",
+            result.day, result.month, result.year);
+}
+
+void calculateDateBefore() {
+    printf("\n--- Calculate Date Before N Days ---\n");
+
+    Date date = inputDate();
+
+    if(!isValidDate(date)) {
+        printf("Invalid date!\n");
+        return;
+    }
+    
+    long long days;
+
+    printf("How many days to subtract? ");
+    
+    if(scanf("%lld", &days) != 1) {
+        printf("Invalid input!\n");
+        clearInputBuffer();
+        return;
+    }
+
+    clearInputBuffer();
+
+    if(days < 0) {
+        printf("Please enter a non-negative number.\n");
+        return;
+    }
+
+    if(days > dateToDays(date)) {
+        printf("Result would be before 01-01-0001.\n");
+        return;
+    }
+
+    Date result = subtractDays(date, days);
+
+    printf("\nResult: %02d-%02d-%04d\n",
+            result.day, result.month, result.year);
+}
+
+void checkLeapYear() {
+    int year;
+
+    printf("\n--- Leap Year Checker ---\n");
+    printf("Enter year: ");
+    
+    if(scanf("%d", &year) != 1) {
+        printf("Invalid input!\n");
+        clearInputBuffer();
+        return;
+    }
+
+    clearInputBuffer();
+
+    if(year < 1) {
+        printf("Invalid year!\n");
+        return;
+    }
+    if(isLeapYear(year)) {
+        printf("%d is a leap year.\n", year);
     }
     else {
+        printf("%d is not a leap year.\n", year);
+    }
+}
+
+void findDayOfWeek() {
+    printf("\n--- Day of the Week ---\n");
+
+    Date date = inputDate();
+
+    if(!isValidDate(date)) {
         printf("Invalid date!\n");
+        return;
     }
 
-    char *days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-    printf("Day of the week: %s\n", days[dayOfWeek(date)]);
-    printf("Day number : %lld\n", dateToDays(date));
-    printf("Days Between: %lld\n", daysBetween(date, currentDate));
-    printf("30 days later: %02d-%02d-%04d\n",
-       newDate.day, newDate.month, newDate.year);
-    printf("30 days earlier: %02d-%02d-%04d\n",
-       newDate1.day, newDate1.month, newDate1.year);
+    char *days[] = {
+        "Sunday", "Monday", "Tuesday",
+        "Wednesday", "Thursday", "Friday", "Saturday"
+    };
+    printf("\n%s\n", days[dayOfWeek(date)]);
+}
+
+int main() {
+    int choice;
 
     do {
         displayMenu();
-        scanf("%d", &choice);
+        
+        if(scanf("%d", &choice) != 1) {
+            printf("Invalid input!\n");
+            clearInputBuffer();
+            continue;
+        }
+        clearInputBuffer();
 
         switch(choice) {
             case 1:
                 calculateDaysBetween();
                 break;
-
+            case 2:
+                calculateDateAfter();
+                break;
+            case 3:
+                calculateDateBefore();
+                break;
+            case 4:
+                checkLeapYear();
+                break;
+            case 5:
+                findDayOfWeek();
+                break;
             case 6:
                 printf("Exiting...\n");
                 break;
@@ -235,8 +360,6 @@ int main() {
             default:
                 printf("Invalid option!\n");
         }
-
     } while(choice != 6);
-
     return 0;
 }
