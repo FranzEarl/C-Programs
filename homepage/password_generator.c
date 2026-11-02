@@ -15,7 +15,6 @@ int main() {
 
     printf("=== Password Generator ===\n");
     printf("Enter Password Length: ");
-    scanf("%d", &len);
 
     if (scanf("%d", &len) != 1) {
         printf("Invalid input.\n");
