@@ -25,3 +25,23 @@ Compile and run with GCC:
 gcc todo_list.c -o todo_list
 ./todo_list
 ```
+
+## Quiz game
+
+The quiz game loads multiple-choice questions from `quiz_questions.txt`,
+shuffles their order, and displays the final score. Each line in the questions
+file must contain a question, four answer options, and the correct option
+number, separated by `|`.
+
+Compile and run with GCC:
+
+```sh
+gcc quiz_game.c -o quiz_game
+./quiz_game
+```
+
+You can also pass a different questions file as the first argument:
+
+```sh
+./quiz_game my_questions.txt
+```
