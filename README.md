@@ -45,3 +45,16 @@ You can also pass a different questions file as the first argument:
 ```sh
 ./quiz_game my_questions.txt
 ```
+
+## Sudoku solver
+
+Enter a Sudoku puzzle one row at a time, using digits `1`-`9` for clues and
+`0` or `.` for empty cells. The program checks for duplicate clues and solves
+valid puzzles using backtracking.
+
+Compile and run with GCC:
+
+```sh
+gcc sudoku_solver.c -o sudoku_solver
+./sudoku_solver
+```
