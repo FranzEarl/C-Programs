@@ -40,7 +40,6 @@ gcc quiz_game.c -o quiz_game
 ./quiz_game
 ```
 
-
 You can also pass a different questions file as the first argument:
 
 ```sh
